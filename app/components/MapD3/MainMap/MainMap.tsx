@@ -59,6 +59,7 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
     if (hoveredIndex == index)
       setHoveredIndex(null);
   }
+  
 
   return (
     <>
@@ -66,9 +67,11 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
       <svg width={"100%"} height={500}>
         <g className="houseDistricts gTransform">
           {houseDistricts.map((district, index) => {
+            const pathD = pathGenerator(district as d3.GeoPermissibleObjects);
+            if (!pathD) return null;
             return (
               <path
-                d={pathGenerator(district)}
+                d={pathD}
                 key={index}
                 fill={getFillColor(index)}
                 opacity={index == hoveredIndex ? .5 : 1}
