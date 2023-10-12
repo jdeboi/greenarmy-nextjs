@@ -6,7 +6,7 @@ interface BillSidebarProps {
     politician: IPolitician
 }
 
-export default function VoteSlider({ politician }: BillSidebarProps) {
+export default function Sidebar({ politician }: BillSidebarProps) {
 
     const barH = 35;
     const barColors = ["#2ABD12", "#F00000", "#CF6"];
@@ -36,19 +36,19 @@ export default function VoteSlider({ politician }: BillSidebarProps) {
         return voteColorSpectrum.getVoteHex(politician.score);
     }
 
-    const buttonStyle = {
-
-    }
-
-
     return (
         <>
-
             <div className="min-h-[160px]">
+                {politician.name == "" &&
+                    <div className="text-slate-300 text-2xl">
+                        Hover over the map to get a rating...
+                    </div>
+                }
+
                 {/* score text */}
                 {politician.score == "N/A" &&
-                    <div style={{ color: "gray" }}>
-                        <span className="text-3xl">Score N/A</span>
+                    <div className="text-slate-300">
+                        <span className="text-2xl">Score N/A</span>
                     </div>
                 }
                 {politician.score && politician.score !== "N/A" &&

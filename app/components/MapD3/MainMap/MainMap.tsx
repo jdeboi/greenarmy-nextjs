@@ -30,27 +30,37 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
     .projection(projection);
 
   const getFillColor = (index: number) => {
-    const scoreStr = legislatorsJson[index].Score
+    const scoreStr = getLegislator(index)?.Score;
+    if (!scoreStr)
+      return 0;
     if (scoreStr == "N/A")
       return "gray";
     let score = parseInt(scoreStr) || 0;
     return voteColorSpectrum.getVoteHex(score);
   }
 
-  const handleMouseEnter = (index: number) => {
-    const d = legislatorsJson[index];
-    setPolitician({
-      name: `${d.First} ${d.Last}`,
-      city: d.City,
-      district: d.District,
-      email: d.Email,
-      phone: d.Phone,
-      supported: d.Supported,
-      opposed: d.Opposed,
-      absent: d.Absent,
-      score: d.Score
-    })
+  const getLegislator = (districtIndex: number) => {
+    return legislatorsJson.find((legis) => legis.District == (districtIndex + 1) + "" && legis.Chamber == "Representative");
+  }
 
+  const handleMouseEnter = (index: number) => {
+    const d = getLegislator(index);
+
+    if (d) {
+      setPolitician({
+        name: `${d.First} ${d.Last}`,
+        city: d.City,
+        district: d.District,
+        email: d.Email,
+        phone: d.Phone,
+        supported: d.Supported,
+        opposed: d.Opposed,
+        absent: d.Absent,
+        score: d.Score
+      })
+    }
+
+    // console.log(index);
     setHoveredIndex(index);
   }
 
@@ -59,7 +69,7 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
     if (hoveredIndex == index)
       setHoveredIndex(null);
   }
-  
+
 
   return (
     <>
