@@ -4,23 +4,24 @@
 import { useState, Dispatch, SetStateAction } from 'react';
 import * as d3 from 'd3';
 
-import legislatorsJson from './data/legislators.json';
+import legislatorsJson from './data/houseLegislators.json';
 import districtsJson from './data/districts.json';
 
 
-import { IPolitician } from '@/app/types';
+import { ILegislator } from '@/app/types';
 import { voteColorSpectrum } from '../../../utilities';
 
 interface MainMapProps {
-  setPolitician: Dispatch<SetStateAction<IPolitician>>,
+  setLegislator: Dispatch<SetStateAction<ILegislator>>,
 }
 
 const numHouseDistricts = 105;
 const houseDistricts = districtsJson.geometries.slice(0, numHouseDistricts);
 
-const MainMap = ({ setPolitician }: MainMapProps) => {
+const MainMap = ({ setLegislator }: MainMapProps) => {
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null); // new state
+  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
   const projection = d3.geoAlbers()
     .scale(7190)
@@ -32,7 +33,7 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
   const getFillColor = (index: number) => {
     const scoreStr = getLegislator(index)?.Score;
     if (!scoreStr)
-      return 0;
+      return "black";
     if (scoreStr == "N/A")
       return "gray";
     let score = parseInt(scoreStr) || 0;
@@ -43,11 +44,11 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
     return legislatorsJson.find((legis) => legis.District == (districtIndex + 1) + "" && legis.Chamber == "Representative");
   }
 
-  const handleMouseEnter = (index: number) => {
+  const setLegislatorIndex = (index: number) => {
     const d = getLegislator(index);
 
     if (d) {
-      setPolitician({
+      setLegislator({
         name: `${d.First} ${d.Last}`,
         city: d.City,
         district: d.District,
@@ -59,15 +60,30 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
         score: d.Score
       })
     }
+  }
 
-    // console.log(index);
+  const handleMouseEnter = (index: number) => {
+    if (clickedIndex !== null) return;
     setHoveredIndex(index);
+    setLegislatorIndex(index);
   }
 
   const handleMouseLeave = (index: number) => {
     // prevent edge case where onMouseEnter() is called before leave?
-    if (hoveredIndex == index)
+    if (clickedIndex == null)
       setHoveredIndex(null);
+  }
+
+  const handleMouseDown = (index: number) => {
+    if (index == clickedIndex)
+      setClickedIndex(null);
+    else {
+      setClickedIndex(index);
+      setHoveredIndex(index);
+      setLegislatorIndex(index);
+    }
+
+
   }
 
 
@@ -87,6 +103,7 @@ const MainMap = ({ setPolitician }: MainMapProps) => {
                 opacity={index == hoveredIndex ? .5 : 1}
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={() => handleMouseLeave(index)}
+                onMouseDown={() => handleMouseDown(index)}
               />
             )
           })}

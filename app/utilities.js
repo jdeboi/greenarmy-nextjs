@@ -1,4 +1,25 @@
 /* get colors */
+export const barColors = ["#2ABD12", "#F00000", "#CF6"];
+
+export const getHouseBillLabel = (index) => {
+	switch (index) {
+		case 0: return "v1";
+		case 1: return "v2";
+		case 2: return "v3";
+		case 3: return "v5";
+		case 4: return "v7";
+		case 5: return "v8";
+		case 6: return "v9";
+		case 7: return "v10";
+		case 8: return "v12";
+		case 9: return "v13";
+		case 10: return "v14";
+		case 11: return "v15";
+		case 12: return "v16";
+		case 13: return "v17";
+		default: return "v1"
+	}
+}
 export function getGradeColor(d) {
 	if(d.Grade=="A") return barColors[0];
 	else if (d.Grade=='B') return barColors[0];

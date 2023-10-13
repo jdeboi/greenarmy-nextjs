@@ -1,6 +1,6 @@
 
 
-export interface IPolitician {
+export interface ILegislator {
     name: string;
     city: string;
     district: string;

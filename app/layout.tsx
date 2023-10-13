@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <NavBar />
-        <div className="min-h-screen container mx-auto pt-100">
+        <div className="min-h-screen container mx-auto pt-70">
           {children}
         </div>
       </body>
