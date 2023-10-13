@@ -19,11 +19,11 @@ export default function MapD3() {
     });
 
     return (
-        <div className="grid grid-cols-12 gap-4">
-            <div className={`col-span-7 pt-10`}>
+        <div className="grid md:grid-cols-12 md:gap-4">
+            <div className={`md:col-span-7 pt-10`}>
                 <MainMap setLegislator={setLegislator} />
             </div>
-            <div className="col-span-5">
+            <div className="md:col-span-5">
                 <Sidebar legislator={legislator} />
             </div>
         </div>
