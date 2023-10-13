@@ -1,8 +1,9 @@
 
 import { ILegislator } from '@/app/types';
-import { voteColorSpectrum } from '@/app/utilities';
-import { barColors } from '@/app/utilities';
+import { getRatingColor } from '@/app/utilities/colors';
+import { BAR_COLORS } from '@/app/utilities/colors';
 
+const barColors = [BAR_COLORS.SUPPORTED, BAR_COLORS.OPPOSED, BAR_COLORS.ABSENT];
 interface BillSidebarProps {
     legislator: ILegislator,
     svgWidth: number
@@ -32,20 +33,9 @@ export default function RatingsBar({ legislator, svgWidth }: BillSidebarProps) {
         else return getVoteWidth(0) + getVoteWidth(1)
     }
 
-
-    const getTextColor = () => {
-        return voteColorSpectrum.getVoteHex(legislator.score);
-    }
-
-
     return (
         <>
             <div className="min-h-[140px]">
-                {legislator.name == "" &&
-                    <div className="text-slate-300 text-2xl">
-                        Hover over the map to get a rating...
-                    </div>
-                }
 
                 {/* score text */}
                 {legislator.score == "N/A" &&
@@ -53,8 +43,9 @@ export default function RatingsBar({ legislator, svgWidth }: BillSidebarProps) {
                         <span className="text-2xl">Score N/A</span>
                     </div>
                 }
+                {/* If the score is N/A */}
                 {legislator.score && legislator.score !== "N/A" &&
-                    <div style={{ color: getTextColor() }}>
+                    <div style={{ color: getRatingColor(legislator.score) }}>
                         <span className="text-8xl">{legislator.score}</span>
                         <span className="text-6xl">%</span>
                     </div>
@@ -84,7 +75,7 @@ export default function RatingsBar({ legislator, svgWidth }: BillSidebarProps) {
                             <div
                                 className="btn btn-xs"
                                 key={index}
-                                style={{ backgroundColor: barColors[index], color: index == 2 ? "black" : "white" }}>
+                                style={{ backgroundColor: col, color: index == 2 ? "black" : "white" }}>
                                 {buttonStates[index]}
                             </div>
                         )

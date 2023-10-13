@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { ILegislator } from '@/app/types';
 import { useState } from 'react';
-import votesJson from '../../MainMap/data/houseVotes.json';
-import billsJson from '../../MainMap/data/billsData.json';
-import { getHouseBillLabel, getShadeColor, getVoteColor } from '@/app/utilities';
+import votesJson from '../../data/houseVotes.json';
+import billsJson from '../../data/billsData.json';
+import { getHouseBillLabel, getShadeColor, getVoteColor } from '@/app/utilities/colors';
 
 const houseBills = billsJson.filter((bill) => !["v4", "v6", "v11"].includes(bill.Label))
 

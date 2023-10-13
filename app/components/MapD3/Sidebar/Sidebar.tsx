@@ -15,11 +15,15 @@ export default function Sidebar({ legislator }: BillSidebarProps) {
 
     return (
         <>
-            <LegislatorInfo legislator={legislator} />
-            <br />
-            <RatingsBar legislator={legislator} svgWidth={svgWidth} />
-            <br />
-            <BillsChart legislator={legislator} svgWidth={svgWidth} />
+            <div className="mb-4">
+                <LegislatorInfo legislator={legislator} />
+            </div>
+            <div className="mb-4">
+                <RatingsBar legislator={legislator} svgWidth={svgWidth} />
+            </div>
+            <div className="mb-4">
+                <BillsChart legislator={legislator} svgWidth={svgWidth} />
+            </div>
         </>
     )
 };

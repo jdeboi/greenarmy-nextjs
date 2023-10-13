@@ -1,24 +1,24 @@
 // components/BarChart.js
 'use client'
 
-import { useState, Dispatch, SetStateAction } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import * as d3 from 'd3';
 
-import legislatorsJson from './data/houseLegislators.json';
-import districtsJson from './data/districts.json';
+import legislatorsJson from '../data/houseLegislators.json';
+import districtsJson from '../data/districts.json';
 
 
 import { ILegislator } from '@/app/types';
-import { voteColorSpectrum } from '../../../utilities';
+import { getRatingColor } from '../../../utilities/colors';
 
 interface MainMapProps {
   setLegislator: Dispatch<SetStateAction<ILegislator>>,
 }
 
-const numHouseDistricts = 105;
-const houseDistricts = districtsJson.geometries.slice(0, numHouseDistricts);
+const NUM_DISTRICTS = 105;
+const houseDistricts = districtsJson.geometries.slice(0, NUM_DISTRICTS);
 
-const MainMap = ({ setLegislator }: MainMapProps) => {
+export default function MainMap ({ setLegislator }: MainMapProps) {
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null); // new state
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
@@ -27,17 +27,11 @@ const MainMap = ({ setLegislator }: MainMapProps) => {
     .scale(7190)
     .translate([-253.6512, -708.433]);
 
-  const pathGenerator = d3.geoPath()
-    .projection(projection);
+  const pathGenerator = d3.geoPath().projection(projection);
 
-  const getFillColor = (index: number) => {
+  const getDistrictFillColor = (index: number) => {
     const scoreStr = getLegislator(index)?.Score;
-    if (!scoreStr)
-      return "black";
-    if (scoreStr == "N/A")
-      return "gray";
-    let score = parseInt(scoreStr) || 0;
-    return voteColorSpectrum.getVoteHex(score);
+    return getRatingColor(scoreStr);
   }
 
   const getLegislator = (districtIndex: number) => {
@@ -86,6 +80,11 @@ const MainMap = ({ setLegislator }: MainMapProps) => {
 
   }
 
+  useEffect(() => {
+    setLegislatorIndex(0);
+    setHoveredIndex(0);
+  }, [])
+
 
   return (
     <>
@@ -99,7 +98,7 @@ const MainMap = ({ setLegislator }: MainMapProps) => {
               <path
                 d={pathD}
                 key={index}
-                fill={getFillColor(index)}
+                fill={getDistrictFillColor(index)}
                 opacity={index == hoveredIndex ? .5 : 1}
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={() => handleMouseLeave(index)}
@@ -112,6 +111,3 @@ const MainMap = ({ setLegislator }: MainMapProps) => {
     </>
   );
 };
-
-export default MainMap;
-
