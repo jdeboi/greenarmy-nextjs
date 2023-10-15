@@ -75,7 +75,11 @@ export default function RatingsBar({ legislator, svgWidth }: BillSidebarProps) {
                             <div
                                 className="btn btn-xs"
                                 key={index}
-                                style={{ backgroundColor: col, color: index == 2 ? "black" : "white" }}>
+                                style={{
+                                    backgroundColor: col,
+                                    color: index == 2 ? "black" : "white",
+                                    pointerEvents: "none"
+                                }}>
                                 {buttonStates[index]}
                             </div>
                         )

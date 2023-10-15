@@ -7,22 +7,29 @@ import BillsChart from './components/BillsChart';
 
 
 interface BillSidebarProps {
-    legislator: ILegislator
+    legislator: ILegislator;
+    isHouse: boolean;
 }
 
-export default function Sidebar({ legislator }: BillSidebarProps) {
-    const svgWidth = 370;
+const svgWidth = 370;
+
+export default function Sidebar({ isHouse,legislator }: BillSidebarProps) {
+
 
     return (
         <>
             <div className="mb-4">
-                <LegislatorInfo legislator={legislator} />
+                <LegislatorInfo isHouse={isHouse} legislator={legislator} />
             </div>
             <div className="mb-4">
                 <RatingsBar legislator={legislator} svgWidth={svgWidth} />
             </div>
             <div className="mb-4">
-                <BillsChart legislator={legislator} svgWidth={svgWidth} />
+                <BillsChart
+                    legislator={legislator}
+                    isHouse={isHouse}
+                    svgWidth={svgWidth}
+                />
             </div>
         </>
     )

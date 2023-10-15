@@ -90,3 +90,24 @@ export const getHouseBillLabel = (index: number) => {
 		default: return "v1"
 	}
 }
+
+export const getSenateBillLabel = (index: number) => {
+	switch (index) {
+		case 0: return "v1";
+		case 1: return "v2";
+		case 2: return "v4";
+		case 3: return "v5";
+		case 4: return "v7";
+		case 5: return "v8";
+		case 6: return "v9";
+		case 7: return "v10";
+		case 8: return "v11";
+		case 9: return "v12";
+		case 10: return "v13";
+		case 11: return "v14";
+		case 12: return "v15";
+		case 13: return "v16";
+		case 14: return "v17";
+		default: return "v1"
+	}
+}

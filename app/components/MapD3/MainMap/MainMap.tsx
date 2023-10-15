@@ -4,21 +4,47 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import * as d3 from 'd3';
 
-import legislatorsJson from '../data/houseLegislators.json';
-import districtsJson from '../data/districts.json';
 
 
 import { ILegislator } from '@/app/types';
 import { getRatingColor } from '../../../utilities/colors';
 
+type IDistricts = ({
+  type: string;
+  coordinates: number[][][];
+} | {
+  type: string;
+  coordinates: number[][][][];
+})[];
+
+type ILegislators = {
+  ID: string;
+  Score: string;
+  Grade: string;
+  Description: string;
+  First: string;
+  Last: string;
+  Party: string;
+  District: string;
+  City: string;
+  Email: string;
+  Phone: string;
+  Chamber: string;
+  Supported: string;
+  Absent: string;
+  Opposed: string;
+  Picture: string;
+  loadID: string;
+}[];
+
 interface MainMapProps {
   setLegislator: Dispatch<SetStateAction<ILegislator>>,
+  districts: IDistricts,
+  legislators: ILegislators,
 }
 
-const NUM_DISTRICTS = 105;
-const houseDistricts = districtsJson.geometries.slice(0, NUM_DISTRICTS);
 
-export default function MainMap ({ setLegislator }: MainMapProps) {
+export default function MainMap({ districts, legislators, setLegislator }: MainMapProps) {
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null); // new state
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
@@ -35,12 +61,11 @@ export default function MainMap ({ setLegislator }: MainMapProps) {
   }
 
   const getLegislator = (districtIndex: number) => {
-    return legislatorsJson.find((legis) => legis.District == (districtIndex + 1) + "" && legis.Chamber == "Representative");
+    return legislators.find((legis) => +legis.District == (districtIndex + 1));
   }
 
   const setLegislatorIndex = (index: number) => {
     const d = getLegislator(index);
-
     if (d) {
       setLegislator({
         name: `${d.First} ${d.Last}`,
@@ -90,8 +115,8 @@ export default function MainMap ({ setLegislator }: MainMapProps) {
     <>
 
       <svg width={"100%"} height={500}>
-        <g className="houseDistricts gTransform">
-          {houseDistricts.map((district, index) => {
+        <g className="districts gTransform">
+          {districts.map((district, index) => {
             const pathD = pathGenerator(district as d3.GeoPermissibleObjects);
             if (!pathD) return null;
             return (

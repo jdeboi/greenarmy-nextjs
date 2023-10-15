@@ -1,15 +1,20 @@
 import { useEffect } from 'react';
 import { ILegislator } from '@/app/types';
 import { useState } from 'react';
-import votesJson from '../../data/houseVotes.json';
-import billsJson from '../../data/billsData.json';
-import { getHouseBillLabel, getShadeColor, getVoteColor } from '@/app/utilities/colors';
+import houseVotes from '../../data/houseVotes.json';
+import senateVotes from '../../data/senateVotes.json';
 
+import billsJson from '../../data/billsData.json';
 const houseBills = billsJson.filter((bill) => !["v4", "v6", "v11"].includes(bill.Label))
+const senateBills = billsJson.filter((bill) => !["v3", "v6"].includes(bill.Label))
+
+import { getHouseBillLabel, getSenateBillLabel, getShadeColor, getVoteColor } from '@/app/utilities/colors';
+
 
 interface IBillsChartProps {
     legislator: ILegislator,
-    svgWidth: number
+    svgWidth: number,
+    isHouse: boolean
 }
 
 
@@ -23,10 +28,11 @@ interface IBillData {
     "Notes": string;
 }
 
-export default function BillsChart({ legislator, svgWidth }: IBillsChartProps) {
+const billW = 25;
+const spacing = 10;
 
-    const billW = 25;
-    const spacing = 10;
+
+export default function BillsChart({ isHouse, legislator, svgWidth }: IBillsChartProps) {
     const numPerRow = Math.floor(svgWidth / (billW + spacing));
 
     const [billNotes, setBillNotes] = useState('');
@@ -35,21 +41,33 @@ export default function BillsChart({ legislator, svgWidth }: IBillsChartProps) {
     const [billHighlighted, setBillHighlighted] = useState<number | null>(null);
     const [billClicked, setBillClicked] = useState<number | null>(null);
 
+    const [bills, setBills] = useState(isHouse ? houseBills : senateBills);
+    const [votes, setVotes] = useState(isHouse ? houseVotes : senateVotes);
+
     useEffect(() => {
-        const bill = houseBills[0];
+        setBills(isHouse ? houseBills : senateBills);
+        setVotes(isHouse ? houseVotes : senateVotes);
+    }, [isHouse]);
+
+    useEffect(() => {
+        const bill = bills[0];
         setBillNumber(bill.Number);
         setBillNotes(bill.Notes);
         setBillSubject(bill.Subject);
         setBillHighlighted(0);
     }, [])
 
+
+
     const getBillColor = (index: number) => {
         let district = legislator.district;
-        let votes = votesJson.find((vote) => vote.district == district);
-        if (!votes)
+        let legislatorVotes = votes.find((vote) => vote.district == district);
+       
+        if (!legislatorVotes)
             return "black";
 
-        const vote = votes[getHouseBillLabel(index)];
+        const label = isHouse ? getHouseBillLabel(index) : getSenateBillLabel(index);
+        const vote = legislatorVotes[label];
 
         let col = getShadeColor(getVoteColor(vote), 0); // -.40
         return col;
@@ -92,7 +110,7 @@ export default function BillsChart({ legislator, svgWidth }: IBillsChartProps) {
             {legislator.name &&
                 <>
                     <svg width={svgWidth} height={2 * (billW + 10)} >
-                        {houseBills.map((bill, index) => {
+                        {bills.map((bill, index) => {
                             return (
                                 <rect
                                     fill={getBillColor(index)}
