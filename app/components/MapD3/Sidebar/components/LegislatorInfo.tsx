@@ -15,12 +15,12 @@ export default function LegislatorInfo({ legislator, isHouse }: ILegislatorInfoP
         <div>
             {legislator.name ?
                 <>
-                    <h2><span className="italic">{isHouse ? "Rep." : "Sen."} </span>{legislator.name}</h2>
+                    <h2><span className="italic text-">{isHouse ? "Rep." : "Sen."} </span>{legislator.name}</h2>
 
-                    <div><span className="font-bold pr-1 text-gray-400">City: </span>{legislator.city}</div>
-                    <div><span className="font-bold pr-1 text-gray-400">District: </span>{legislator.district}</div>
-                    <div><span className="font-bold pr-1 text-gray-400">Phone: </span>{legislator.phone}</div>
-                    <div><span className="font-bold pr-1 text-gray-400">Email: </span>{legislator.email}</div>
+                    <div><span className="pr-1 text-gray-400">City: </span>{legislator.city}</div>
+                    <div><span className="pr-1 text-gray-400">District: </span>{legislator.district}</div>
+                    <div><span className="pr-1 text-gray-400">Phone: </span>{legislator.phone}</div>
+                    <div><span className="pr-1 text-gray-400">Email: </span>{legislator.email}</div>
                 </> :
                 null
             }

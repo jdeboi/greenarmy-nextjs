@@ -17,7 +17,7 @@ import { render } from '@testing-library/react'
 import About from '../app/(pages)/about/page'
 import MainMap from '../app/components/MapD3/MainMap/MainMap'
 import '@testing-library/jest-dom'
-
+import legislators from '../app/components/MapD3/data/houseLegislators.json'
 
 describe('About Page', () => {
     test('about should contain an h1 tag', () => {
@@ -33,11 +33,19 @@ describe('Main Map', () => {
         render(<MainMap setLegislator={jest.fn()} />);
     });
 
-    test('all districts rendered', () => {
-        const { container } = render(<MainMap setLegislator={jest.fn()} />);
+    test('all house districts rendered', () => {
+        const { container } = render(
+            <MainMap isHouse={true} setLegislator={jest.fn()} />);
         const paths = container.querySelectorAll('path');
         expect(paths.length).toBe(105);
-    })
+    });
+
+    test('all senate districts rendered', () => {
+        const { container } = render(
+            <MainMap isHouse={false} setLegislator={jest.fn()} />);
+        const paths = container.querySelectorAll('path');
+        expect(paths.length).toBe(39);
+    });
 
     // TODO TESTS
     // 'District clicked, stop changing politicians / districts'
@@ -48,6 +56,6 @@ describe('Main Map', () => {
     // 'side bar legislator info updated when district changes'
     // 'side bar rating bar chart updated when district changes'
     // 'side bar votes updated when district changes'
-   
+
 });
 

@@ -4,47 +4,28 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import * as d3 from 'd3';
 
+import houseLegislatorsJson from '../data/houseLegislators.json';
+import senateLegislatorsJson from '../data/senateLegislators.json';
+import districtsJson from '../data/districts.json';
+
+const NUM_HOUSE_DISTRICTS = 105;
+const NUM_SENATE_DISTRICTS = 39;
+const houseDistricts = districtsJson.geometries.slice(0, NUM_HOUSE_DISTRICTS);
+const senateDistricts = districtsJson.geometries.slice(NUM_HOUSE_DISTRICTS, NUM_HOUSE_DISTRICTS+NUM_SENATE_DISTRICTS);
 
 
 import { ILegislator } from '@/app/types';
 import { getRatingColor } from '../../../utilities/colors';
 
-type IDistricts = ({
-  type: string;
-  coordinates: number[][][];
-} | {
-  type: string;
-  coordinates: number[][][][];
-})[];
-
-type ILegislators = {
-  ID: string;
-  Score: string;
-  Grade: string;
-  Description: string;
-  First: string;
-  Last: string;
-  Party: string;
-  District: string;
-  City: string;
-  Email: string;
-  Phone: string;
-  Chamber: string;
-  Supported: string;
-  Absent: string;
-  Opposed: string;
-  Picture: string;
-  loadID: string;
-}[];
-
 interface MainMapProps {
   setLegislator: Dispatch<SetStateAction<ILegislator>>,
-  districts: IDistricts,
-  legislators: ILegislators,
+  isHouse: boolean
 }
 
 
-export default function MainMap({ districts, legislators, setLegislator }: MainMapProps) {
+export default function MainMap({ isHouse, setLegislator }: MainMapProps) {
+  const [districts, setDistricts] = useState(isHouse ? houseDistricts : senateDistricts);
+  const [legislators, setLegislators] = useState(isHouse ? houseLegislatorsJson : senateLegislatorsJson);
 
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null); // new state
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
@@ -101,8 +82,6 @@ export default function MainMap({ districts, legislators, setLegislator }: MainM
       setHoveredIndex(index);
       setLegislatorIndex(index);
     }
-
-
   }
 
   useEffect(() => {
@@ -110,6 +89,16 @@ export default function MainMap({ districts, legislators, setLegislator }: MainM
     setHoveredIndex(0);
   }, [])
 
+  useEffect(() => {
+    if (isHouse) {
+        setDistricts(houseDistricts);
+        setLegislators(houseLegislatorsJson);
+    }
+    else {
+        setDistricts(senateDistricts);
+        setLegislators(senateLegislatorsJson);
+    }
+}, [isHouse])
 
   return (
     <>

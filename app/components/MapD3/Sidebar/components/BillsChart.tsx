@@ -130,7 +130,7 @@ export default function BillsChart({ isHouse, legislator, svgWidth }: IBillsChar
                     <div className="text-sm pt-2">
                         <div className="font-bold">{billSubject}</div>
                         <div className="italic">{billNumber}</div>
-                        <div className="text-sm">{billNotes}</div>
+                        <div className="text-sm text-gray-400">{billNotes}</div>
                     </div>
                 </>}
         </>
