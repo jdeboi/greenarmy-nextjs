@@ -68,7 +68,7 @@ export default function RatingsBar({ legislator, svgWidth }: BillSidebarProps) {
             </div>
 
             {/* bar chart key */}
-            {legislator.score &&
+            {legislator.score && legislator.score !== "N/A" &&
                 <div className="flex flex-row">
                     {barColors.map((col, index) => {
                         return (

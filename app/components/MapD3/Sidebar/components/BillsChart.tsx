@@ -107,7 +107,7 @@ export default function BillsChart({ isHouse, legislator, svgWidth }: IBillsChar
 
     return (
         <>
-            {legislator.name &&
+            {legislator.name && legislator.score !== "N/A" &&
                 <>
                     <svg width={svgWidth} height={2 * (billW + 10)} >
                         {bills.map((bill, index) => {
